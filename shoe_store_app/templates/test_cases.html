@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Cases - Shoe Store System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .test-id {
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .valid {
+            color: #28a745;
+            font-weight: 600;
+        }
+        
+        .invalid {
+            color: #dc3545;
+            font-weight: 600;
+        }
+        
+        .classes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .class-badge {
+            background: #667eea;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: #5a6268;
+        }
+        
+        .test-btn {
+            padding: 5px 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .test-btn:hover {
+            background: #5568d3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Test Cases</h1>
+            <p>SE302 Homework 01 - Task 1: Equivalence Class Testing</p>
+        </div>
+        
+        <div class="content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Test Input</th>
+                        <th>Expected Output</th>
+                        <th>Covered Classes</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tc in test_cases %}
+                    <tr>
+                        <td class="test-id">{{ tc.id }}</td>
+                        <td><code>{{ tc.input }}</code></td>
+                        <td class="{{ 'valid' if tc.expected == 'VALID' else 'invalid' }}">{{ tc.expected }}</td>
+                        <td>
+                            <div class="classes">
+                                {% for cls in tc.classes %}
+                                <span class="class-badge">{{ cls }}</span>
+                                {% endfor %}
+                            </div>
+                        </td>
+                        <td>
+                            <button class="test-btn" onclick="testCase('{{ tc.input }}')">Test</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <a href="/" class="back-btn">← Back to Validator</a>
+        </div>
+    </div>
+    
+    <script>
+        function testCase(input) {
+            // Set input value and validate
+            window.location.href = '/';
+            setTimeout(() => {
+                if (window.parent) {
+                    window.parent.document.getElementById('shoeInput').value = input;
+                    window.parent.validateInput();
+                }
+            }, 100);
+        }
+    </script>
+</body>
+</html>
+

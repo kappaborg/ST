@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoe Store System - SE302 Homework 01</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .input-section {
+            margin-bottom: 30px;
+        }
+        
+        .input-section label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .input-group input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .result.valid {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+        }
+        
+        .result.invalid {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+        }
+        
+        .result h3 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .result-details {
+            margin-top: 15px;
+        }
+        
+        .result-details p {
+            margin: 8px 0;
+        }
+        
+        .covered-classes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .class-badge {
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .requirements {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        
+        .requirements h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .requirements ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .requirements li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .requirements li:last-child {
+            border-bottom: none;
+        }
+        
+        .link-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        
+        .link-btn:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👟 Shoe Store System</h1>
+            <p>SE302 Homework 01 - Task 1: Equivalence Class Testing</p>
+        </div>
+        
+        <div class="content">
+            <div class="input-section">
+                <label for="shoeInput">Enter Shoe Entry (Format: itemName,size1,size2,...)</label>
+                <div class="input-group">
+                    <input type="text" id="shoeInput" placeholder="Example: nike,40,43,45" />
+                    <button class="btn" onclick="validateInput()">Validate</button>
+                </div>
+            </div>
+            
+            <div id="result" class="result"></div>
+            
+            <div class="requirements">
+                <h3>📋 System Requirements</h3>
+                <ul>
+                    <li>✅ Item name: Alphabetic characters only, length 2-15 characters</li>
+                    <li>✅ Sizes: Whole numbers between 26-55</li>
+                    <li>✅ Format: itemName,size1,size2,...</li>
+                    <li>✅ Sizes must be in ascending order</li>
+                    <li>✅ Maximum of 5 sizes per item</li>
+                    <li>✅ Commas used as separators</li>
+                    <li>✅ Blank spaces are ignored</li>
+                </ul>
+            </div>
+            
+            <a href="/test_cases" class="link-btn">View All Test Cases →</a>
+        </div>
+    </div>
+    
+    <script>
+        function validateInput() {
+            const input = document.getElementById('shoeInput').value;
+            const resultDiv = document.getElementById('result');
+            
+            if (!input.trim()) {
+                resultDiv.className = 'result invalid';
+                resultDiv.innerHTML = '<h3>❌ Invalid Input</h3><p>Please enter a shoe entry.</p>';
+                resultDiv.style.display = 'block';
+                return;
+            }
+            
+            fetch('/validate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ input: input })
+            })
+            .then(response => response.json())
+            .then(data => {
+                resultDiv.style.display = 'block';
+                
+                if (data.valid) {
+                    resultDiv.className = 'result valid';
+                    resultDiv.innerHTML = `
+                        <h3>✅ VALID Entry</h3>
+                        <div class="result-details">
+                            <p><strong>Item Name:</strong> ${data.item_name}</p>
+                            <p><strong>Sizes:</strong> ${data.sizes.join(', ')}</p>
+                            <p><strong>Covered Equivalence Classes:</strong></p>
+                            <div class="covered-classes">
+                                ${data.covered_classes.map(ec => `<span class="class-badge">${ec}</span>`).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.className = 'result invalid';
+                    resultDiv.innerHTML = `
+                        <h3>❌ INVALID Entry</h3>
+                        <div class="result-details">
+                            <p><strong>Error:</strong> ${data.error}</p>
+                            <p><strong>Covered Equivalence Classes:</strong></p>
+                            <div class="covered-classes">
+                                ${data.covered_classes.map(ec => `<span class="class-badge">${ec}</span>`).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                resultDiv.className = 'result invalid';
+                resultDiv.innerHTML = `<h3>❌ Error</h3><p>${error.message}</p>`;
+                resultDiv.style.display = 'block';
+            });
+        }
+        
+        // Allow Enter key to validate
+        document.getElementById('shoeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                validateInput();
+            }
+        });
+    </script>
+</body>
+</html>
+

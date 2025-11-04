@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library System - SE302 Homework 01</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .login-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .user-info {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .user-info.active {
+            display: block;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .input-group input, .input-group select {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .section h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .book-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .book-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .book-card h4 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .book-card p {
+            color: #666;
+            font-size: 0.9em;
+            margin: 4px 0;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        
+        .status.available {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.borrowed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
+        }
+        
+        .my-books {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .my-books h4 {
+            margin-bottom: 10px;
+        }
+        
+        .my-books ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .my-books li {
+            padding: 8px;
+            background: white;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Library System</h1>
+            <p>SE302 Homework 01 - Task 2: User Story, Test Scenarios, and Test Cases</p>
+        </div>
+        
+        <div class="content">
+            <!-- Login Section -->
+            <div class="login-section">
+                <h3>Login</h3>
+                <div class="input-group">
+                    <input type="text" id="username" placeholder="Username (e.g., john_doe)" />
+                    <input type="password" id="password" placeholder="Password (pass123)" />
+                    <button class="btn" onclick="login()">Login</button>
+                </div>
+                <p style="font-size: 0.9em; color: #666; margin-top: 10px;">
+                    Test users: john_doe, jane_smith (5 books), alice_brown, mary_jones
+                </p>
+            </div>
+            
+            <!-- User Info -->
+            <div id="userInfo" class="user-info">
+                <strong>Logged in as: <span id="currentUser"></span></strong>
+                <button class="btn btn-secondary" onclick="logout()" style="float: right;">Logout</button>
+                <div style="clear: both;"></div>
+            </div>
+            
+            <!-- My Books Section -->
+            <div class="section" id="myBooksSection" style="display: none;">
+                <h3>My Borrowed Books</h3>
+                <div id="myBooks" class="my-books"></div>
+            </div>
+            
+            <!-- Search Section -->
+            <div class="section">
+                <h3>🔍 Search Books</h3>
+                <div class="input-group">
+                    <input type="text" id="searchQuery" placeholder="Enter search term..." />
+                    <select id="searchType">
+                        <option value="title">Title</option>
+                        <option value="author">Author</option>
+                        <option value="isbn">ISBN</option>
+                    </select>
+                    <button class="btn" onclick="searchBooks()">Search</button>
+                </div>
+                <div id="searchResults" class="book-grid"></div>
+            </div>
+            
+            <!-- Catalog Section -->
+            <div class="section">
+                <h3>📚 Book Catalog</h3>
+                <button class="btn" onclick="loadCatalog()">Load Catalog</button>
+                <div id="catalog" class="book-grid"></div>
+            </div>
+            
+            <!-- Messages -->
+            <div id="message" class="message"></div>
+        </div>
+    </div>
+    
+    <script>
+        let currentUsername = null;
+        
+        // Check login status on page load
+        checkLogin();
+        
+        function checkLogin() {
+            fetch('/check_login')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.logged_in) {
+                        currentUsername = data.username;
+                        showUserInfo();
+                        loadMyBooks();
+                    }
+                });
+        }
+        
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            fetch('/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username, password})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    currentUsername = data.username;
+                    showUserInfo();
+                    loadMyBooks();
+                    showMessage('Login successful!', 'success');
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            });
+        }
+        
+        function logout() {
+            fetch('/logout', {method: 'POST'})
+                .then(response => response.json())
+                .then(data => {
+                    currentUsername = null;
+                    document.getElementById('userInfo').classList.remove('active');
+                    document.getElementById('myBooksSection').style.display = 'none';
+                    showMessage('Logged out successfully', 'success');
+                });
+        }
+        
+        function showUserInfo() {
+            document.getElementById('currentUser').textContent = currentUsername;
+            document.getElementById('userInfo').classList.add('active');
+            document.getElementById('myBooksSection').style.display = 'block';
+        }
+        
+        function loadMyBooks() {
+            fetch('/my_books')
+                .then(response => response.json())
+                .then(data => {
+                    const myBooksDiv = document.getElementById('myBooks');
+                    if (data.count === 0) {
+                        myBooksDiv.innerHTML = '<p>You have no borrowed books.</p>';
+                    } else {
+                        myBooksDiv.innerHTML = `
+                            <h4>Borrowed Books (${data.count}/5)</h4>
+                            <ul>
+                                ${data.books.map(book => `
+                                    <li>
+                                        <span>${book}</span>
+                                        <button class="btn btn-secondary" onclick="returnBook('${book}')">Return</button>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        `;
+                    }
+                });
+        }
+        
+        function searchBooks() {
+            const query = document.getElementById('searchQuery').value;
+            const searchType = document.getElementById('searchType').value;
+            
+            fetch('/search', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({query, search_type: searchType})
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayBooks(data.results, 'searchResults');
+                if (data.count === 0) {
+                    showMessage('No books found matching your search criteria.', 'error');
+                }
+            });
+        }
+        
+        function loadCatalog() {
+            fetch('/catalog')
+                .then(response => response.json())
+                .then(data => {
+                    displayBooks(data.books, 'catalog');
+                });
+        }
+        
+        function displayBooks(books, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = books.map(book => `
+                <div class="book-card">
+                    <h4>${book.title}</h4>
+                    <p><strong>Author:</strong> ${book.author}</p>
+                    <p><strong>ISBN:</strong> ${book.isbn}</p>
+                    <span class="status ${book.status.toLowerCase()}">${book.status}</span>
+                    ${book.status === 'Available' && currentUsername ? 
+                        `<button class="btn" onclick="borrowBook('${book.title}')" style="width: 100%; margin-top: 10px;">Borrow</button>` : 
+                        ''}
+                </div>
+            `).join('');
+        }
+        
+        function borrowBook(bookTitle) {
+            if (!currentUsername) {
+                showMessage('You must be logged in to borrow books.', 'error');
+                return;
+            }
+            
+            fetch('/borrow', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({book_title: bookTitle})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    loadMyBooks();
+                    loadCatalog();
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            });
+        }
+        
+        function returnBook(bookTitle) {
+            fetch('/return', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({book_title: bookTitle})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    loadMyBooks();
+                    loadCatalog();
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            });
+        }
+        
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Load catalog on page load
+        loadCatalog();
+    </script>
+</body>
+</html>
+

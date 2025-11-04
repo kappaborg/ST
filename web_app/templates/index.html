@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SE302 Homework 01 - Unified Web Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #e0e7ff;
+            font-weight: 600;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            color: #a5b4fc;
+            opacity: 0.9;
+        }
+        
+        .content {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        h2 {
+            text-align: center;
+            color: #c7d2fe;
+            margin-bottom: 30px;
+            font-weight: 500;
+            font-size: 1.8em;
+        }
+        
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .task-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .task-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.2);
+        }
+        
+        .task-card h2 {
+            color: #e0e7ff;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+            font-weight: 500;
+        }
+        
+        .task-card .icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+        
+        .task-card p {
+            color: #a5b4fc;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+        
+        .task-card .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: rgba(139, 92, 246, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            color: #e0e7ff;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
+        }
+        
+        .task-card .btn:hover {
+            transform: scale(1.05);
+            background: rgba(139, 92, 246, 0.4);
+            border-color: rgba(139, 92, 246, 0.7);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+        }
+        
+        .info-section {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+        
+        .info-section h3 {
+            color: #c7d2fe;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            font-weight: 500;
+        }
+        
+        .info-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .info-section li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #a5b4fc;
+            font-size: 0.95em;
+        }
+        
+        .info-section li:last-child {
+            border-bottom: none;
+        }
+        
+        .info-section li strong {
+            color: #e0e7ff;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SE302 Homework 01</h1>
+            <p>Software Testing and Maintenance - Web Application</p>
+        </div>
+        
+        <div class="content">
+            <h2>Select a System to Test</h2>
+            
+            <div class="tasks-grid">
+                <!-- Task 1 -->
+                <div class="task-card" onclick="window.location.href='/task1'">
+                    <div class="icon">👟</div>
+                    <h2>Task 1: Shoe Store</h2>
+                    <p>
+                        Equivalence class testing implementation<br>
+                        Validates shoe entry format with real-time feedback<br>
+                        Can test all 25 test cases from the homework
+                    </p>
+                    <a href="/task1" class="btn">Test Shoe Store →</a>
+                </div>
+                
+                <!-- Task 2 -->
+                <div class="task-card" onclick="window.location.href='/task2'">
+                    <div class="icon">📚</div>
+                    <h2>Task 2: Library System</h2>
+                    <p>
+                        Library management with user stories<br>
+                        Full functionality: login, search, borrow, return<br>
+                        Implements all acceptance criteria from homework
+                    </p>
+                    <a href="/task2" class="btn">Test Library →</a>
+                </div>
+                
+                <!-- Task 3 -->
+                <div class="task-card" onclick="window.location.href='/task3'">
+                    <div class="icon">📊</div>
+                    <h2>Task 3: Statistics</h2>
+                    <p>
+                        Statistical functions testing<br>
+                        Interactive calculator for mean, median, mode, etc.<br>
+                        Can run predefined test cases
+                    </p>
+                    <a href="/task3" class="btn">Test Statistics →</a>
+                </div>
+            </div>
+            
+            <div class="info-section">                
+                <ul>
+                    <li><strong>Task 1:</strong> Shoe store validator - tests input validation with equivalence class coverage</li>
+                    <li><strong>Task 2:</strong> Library system - full implementation with login, borrow, return, and search features</li>
+                    <li><strong>Task 3:</strong> Statistics calculator - interactive tool for testing statistical functions</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
