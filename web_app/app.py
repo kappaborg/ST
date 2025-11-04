@@ -14,7 +14,7 @@ from stats_utils import mean, median, mode, range_list, remove_outliers
 
 app = Flask(__name__)
 # TODO: move to env var later
-app.secret_key = 'se302_homework_secret_key_2024'
+app.secret_key = 'se302_homework_secret_key_2025'
 
 # Task 1: Shoe store validation logic
 # Implemented based on the homework requirements

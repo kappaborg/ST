@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 1: Shoe Store System - SE302 Homework 01</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            color: #e0e7ff;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .header p {
+            color: #a5b4fc;
+            opacity: 0.9;
+        }
+        
+        .content {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .input-section {
+            margin-bottom: 30px;
+        }
+        
+        .input-section label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #c7d2fe;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .input-group input {
+            flex: 1;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            font-size: 16px;
+            color: #e0e7ff;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group input::placeholder {
+            color: #818cf8;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: rgba(139, 92, 246, 0.5);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            background: rgba(139, 92, 246, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            color: #e0e7ff;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            background: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            display: none;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        .result.valid {
+            background: rgba(34, 197, 94, 0.15);
+            border-color: rgba(34, 197, 94, 0.3);
+            color: #86efac;
+        }
+        
+        .result.invalid {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+        
+        .result h3 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .result-details {
+            margin-top: 15px;
+        }
+        
+        .result-details p {
+            margin: 8px 0;
+            color: inherit;
+        }
+        
+        .covered-classes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .class-badge {
+            background: rgba(139, 92, 246, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            color: #e0e7ff;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+        
+        .requirements {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .requirements h3 {
+            margin-bottom: 15px;
+            color: #c7d2fe;
+            font-weight: 500;
+        }
+        
+        .requirements ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .requirements li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #a5b4fc;
+            font-size: 0.9em;
+        }
+        
+        .requirements li:last-child {
+            border-bottom: none;
+        }
+        
+        .link-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: rgba(107, 114, 128, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(107, 114, 128, 0.4);
+            color: #e0e7ff;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .link-btn:hover {
+            background: rgba(107, 114, 128, 0.4);
+            border-color: rgba(107, 114, 128, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Shoe Store System</h1>
+            <p>SE302 Homework 01 - Task 1: Equivalence Class Testing</p>
+        </div>
+        
+        <div class="content">
+            <div class="input-section">
+                <label for="shoeInput">Enter Shoe Entry (Format: itemName,size1,size2,...)</label>
+                <div class="input-group">
+                    <input type="text" id="shoeInput" placeholder="Example: nike,40,43" />
+                    <button class="btn" onclick="validateInput()">Validate</button>
+                </div>
+            </div>
+            
+            <div id="result" class="result"></div>
+            
+            <div class="requirements">
+                <h3>System Requirements</h3>
+                <ul>
+                    <li>Item name: Alphabetic characters only, length 2-15 characters</li>
+                    <li>Sizes: Whole numbers between 26-55</li>
+                    <li>Format: itemName,size1,size2,...</li>
+                    <li>Sizes must be in ascending order</li>
+                    <li>Maximum of 5 sizes per item</li>
+                    <li>Commas used as separators</li>
+                    <li>Blank spaces are ignored</li>
+                </ul>
+            </div>
+            
+            <a href="index.html" class="link-btn">← Back to Main Menu</a>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+    <script>
+        function validateInput() {
+            const input = document.getElementById('shoeInput').value;
+            const resultDiv = document.getElementById('result');
+            
+            if (!input.trim()) {
+                resultDiv.className = 'result invalid';
+                resultDiv.innerHTML = '<h3>❌ Invalid Input</h3><p>Please enter a shoe entry.</p>';
+                resultDiv.style.display = 'block';
+                return;
+            }
+            
+            // Use JavaScript function instead of API call
+            const data = validateShoeEntry(input);
+            
+            resultDiv.style.display = 'block';
+            
+            if (data.valid) {
+                resultDiv.className = 'result valid';
+                resultDiv.innerHTML = `
+                    <h3>✅ VALID Entry</h3>
+                    <div class="result-details">
+                        <p><strong>Item Name:</strong> ${data.item_name}</p>
+                        <p><strong>Sizes:</strong> ${data.sizes.join(', ')}</p>
+                        <p><strong>Covered Equivalence Classes:</strong></p>
+                        <div class="covered-classes">
+                            ${data.covered_classes.map(ec => `<span class="class-badge">${ec}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            } else {
+                resultDiv.className = 'result invalid';
+                resultDiv.innerHTML = `
+                    <h3>❌ INVALID Entry</h3>
+                    <div class="result-details">
+                        <p><strong>Error:</strong> ${data.error}</p>
+                        <p><strong>Covered Equivalence Classes:</strong></p>
+                        <div class="covered-classes">
+                            ${data.covered_classes.map(ec => `<span class="class-badge">${ec}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        // Allow Enter key to validate
+        document.getElementById('shoeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                validateInput();
+            }
+        });
+    </script>
+</body>
+</html>

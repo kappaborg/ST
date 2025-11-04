@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 3: Statistical Functions - SE302 Homework 01</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            color: #e0e7ff;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .header p {
+            color: #a5b4fc;
+            opacity: 0.9;
+        }
+        
+        .content {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 15px;
+        }
+        
+        .section h3 {
+            margin-bottom: 15px;
+            color: #c7d2fe;
+            font-weight: 500;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .input-group input, .input-group select {
+            flex: 1;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            font-size: 16px;
+            color: #e0e7ff;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group input::placeholder, .input-group select {
+            color: #818cf8;
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: rgba(139, 92, 246, 0.5);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            background: rgba(139, 92, 246, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            color: #e0e7ff;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            background: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 15px;
+        }
+        
+        .result h4 {
+            color: #c7d2fe;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .result-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #e0e7ff;
+            margin: 10px 0;
+        }
+        
+        .result p {
+            color: #a5b4fc;
+            margin: 8px 0;
+        }
+        
+        .test-cases {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .test-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .test-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.2);
+        }
+        
+        .test-card h4 {
+            color: #e0e7ff;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .test-card p {
+            color: #a5b4fc;
+            font-size: 0.9em;
+        }
+        
+        .test-result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .test-result.passed {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #86efac;
+        }
+        
+        .test-result.failed {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            display: none;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        .message.success {
+            background: rgba(34, 197, 94, 0.15);
+            border-color: rgba(34, 197, 94, 0.3);
+            color: #86efac;
+        }
+        
+        .message.error {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: rgba(107, 114, 128, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(107, 114, 128, 0.4);
+            color: #e0e7ff;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .back-btn:hover {
+            background: rgba(107, 114, 128, 0.4);
+            border-color: rgba(107, 114, 128, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Statistical Functions</h1>
+            <p>SE302 Homework 01 - Task 3: Testing and Debugging Statistical Utility Functions</p>
+        </div>
+        
+        <div class="content">
+            <!-- Calculator Section -->
+            <div class="section">
+                <h3>Calculate Statistical Functions</h3>
+                <div class="input-group">
+                    <input type="text" id="numbersInput" placeholder="Enter numbers (e.g., 1,2,3,4,5)" />
+                    <select id="functionSelect">
+                        <option value="mean">Mean</option>
+                        <option value="median">Median</option>
+                        <option value="mode">Mode</option>
+                        <option value="range">Range</option>
+                        <option value="outliers">Remove Outliers</option>
+                    </select>
+                    <input type="number" id="thresholdInput" placeholder="Threshold" value="2" style="width: 150px;" />
+                    <button class="btn" onclick="calculate()">Calculate</button>
+                </div>
+                <div id="result" class="result" style="display: none;"></div>
+            </div>
+            
+            <!-- Test Cases Section -->
+            <div class="section">
+                <h3>Run Test Cases</h3>
+                <div class="test-cases">
+                    <div class="test-card" onclick="runTest('mean_normal')">
+                        <h4>Mean - Normal Case</h4>
+                        <p>Input: [1, 2, 3, 4, 5]<br>Expected: 3.0</p>
+                    </div>
+                    <div class="test-card" onclick="runTest('mean_empty')">
+                        <h4>Mean - Empty List</h4>
+                        <p>Input: []<br>Expected: 0</p>
+                    </div>
+                    <div class="test-card" onclick="runTest('median_even')">
+                        <h4>Median - Even Length</h4>
+                        <p>Input: [1, 2, 3, 4]<br>Expected: 2.5</p>
+                    </div>
+                    <div class="test-card" onclick="runTest('median_odd')">
+                        <h4>Median - Odd Length</h4>
+                        <p>Input: [1, 2, 3, 4, 5]<br>Expected: 3</p>
+                    </div>
+                    <div class="test-card" onclick="runTest('mode_single')">
+                        <h4>Mode - Single Mode</h4>
+                        <p>Input: [1, 2, 2, 3]<br>Expected: 2</p>
+                    </div>
+                    <div class="test-card" onclick="runTest('range_normal')">
+                        <h4>Range - Normal Case</h4>
+                        <p>Input: [10, 2, 7, 5]<br>Expected: 8</p>
+                    </div>
+                    <div class="test-card" onclick="runTest('outliers_normal')">
+                        <h4>Outliers - Remove</h4>
+                        <p>Input: [1, 2, 3, 100]<br>Threshold: 2 std dev</p>
+                    </div>
+                </div>
+                <div id="testResult" style="margin-top: 20px;"></div>
+            </div>
+            
+            <!-- Messages -->
+            <div id="message" class="message"></div>
+            
+            <a href="index.html" class="back-btn">← Back to Main Menu</a>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+    <script>
+        function calculate() {
+            const numbersStr = document.getElementById('numbersInput').value;
+            const functionName = document.getElementById('functionSelect').value;
+            const threshold = parseFloat(document.getElementById('thresholdInput').value) || 2;
+            
+            // Use JavaScript function instead of API call
+            const data = calculateStats(numbersStr, functionName, threshold);
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            
+            if (data.success) {
+                const result = data.result;
+                let html = `
+                    <h4>${result.description}</h4>
+                    <div class="result-value">${JSON.stringify(result.value)}</div>
+                `;
+                
+                if (result.original_count !== undefined) {
+                    html += `
+                        <p><strong>Original Count:</strong> ${result.original_count}</p>
+                        <p><strong>After Filtering:</strong> ${result.filtered_count}</p>
+                        <p><strong>Removed:</strong> ${result.removed_count}</p>
+                    `;
+                }
+                
+                html += `<p><strong>Input:</strong> [${data.input.join(', ')}]</p>`;
+                resultDiv.innerHTML = html;
+            } else {
+                resultDiv.innerHTML = `<p style="color: #fca5a5;">Error: ${data.error}</p>`;
+            }
+        }
+        
+        function runTest(testCaseId) {
+            // Use JavaScript function instead of API call
+            const data = window.runTest(testCaseId);
+            
+            if (!data.success) {
+                showMessage('Error: ' + data.error, 'error');
+                return;
+            }
+            
+            const resultDiv = document.getElementById('testResult');
+            const tc = data.test_case;
+            
+            let html = `
+                <div class="result">
+                    <h4>${tc.description}</h4>
+                    <p><strong>Input:</strong> [${tc.numbers.join(', ')}]</p>
+                    <p><strong>Expected:</strong> ${tc.expected !== undefined ? JSON.stringify(tc.expected) : 'N/A'}</p>
+                    <p><strong>Actual:</strong> ${JSON.stringify(data.actual)}</p>
+            `;
+            
+            if (data.passed !== null) {
+                const status = data.passed ? 'passed' : 'failed';
+                html += `<div class="test-result ${status}">
+                    <strong>${data.passed ? '✅ PASSED' : '❌ FAILED'}</strong>
+                </div>`;
+            } else {
+                html += `<div class="test-result">
+                    <strong>Test executed (no expected value to compare)</strong>
+                </div>`;
+            }
+            
+            html += '</div>';
+            resultDiv.innerHTML = html;
+        }
+        
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Allow Enter key to calculate
+        document.getElementById('numbersInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculate();
+            }
+        });
+    </script>
+</body>
+</html>
