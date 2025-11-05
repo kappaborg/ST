@@ -1,6 +1,3 @@
-// SE302 Homework 01 - Static JavaScript Application
-// All backend logic converted from Python/Flask to JavaScript
-
 // ============================================
 // Task 1: Shoe Store Validation
 // ============================================
@@ -127,22 +124,18 @@ function validateShoeEntry(line) {
     };
 }
 
-// ============================================
-// Task 2: Library System (using localStorage)
-// ============================================
-
 const testUsers = {
-    'john_doe': {password: 'pass123', borrowed_books: []},
-    'jane_smith': {password: 'pass123', borrowed_books: ['Book A', 'Book B', 'Book C', 'Book D', 'Book E']},
-    'alice_brown': {password: 'pass123', borrowed_books: []},
-    'mary_jones': {password: 'pass123', borrowed_books: []}
+    'user1': {password: 'IUS1', borrowed_books: []},
+    'user2': {password: 'IUS2', borrowed_books: ['Book A', 'Book B', 'Book C', 'Book D', 'Book E']},
+    'user3': {password: 'IUS3', borrowed_books: []},
+    'kappasutra': {password: 'admin', borrowed_books: []}
 };
 
 const books = {
     'The Hobbit': {title: 'The Hobbit', author: 'J.R.R. Tolkien', isbn: '978-0547928227', status: 'Available', borrowed_by: null},
     '1984': {title: '1984', author: 'George Orwell', isbn: '978-0451524935', status: 'Available', borrowed_by: null},
-    'Pride and Prejudice': {title: 'Pride and Prejudice', author: 'Jane Austen', isbn: '978-0141439518', status: 'Borrowed', borrowed_by: 'john_doe'},
-    'To Kill a Mockingbird': {title: 'To Kill a Mockingbird', author: 'Harper Lee', isbn: '978-0061120084', status: 'Borrowed', borrowed_by: 'mary_jones'},
+    'Pride and Prejudice': {title: 'Pride and Prejudice', author: 'Jane Austen', isbn: '978-0141439518', status: 'Borrowed', borrowed_by: 'user1'},
+    'To Kill a Mockingbird': {title: 'To Kill a Mockingbird', author: 'Harper Lee', isbn: '978-0061120084', status: 'Borrowed', borrowed_by: 'kappasutra'},
     'The Great Gatsby': {title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', isbn: '978-0743273565', status: 'Available', borrowed_by: null},
     'The Catcher in the Rye': {title: 'The Catcher in the Rye', author: 'J.D. Salinger', isbn: '978-0316769174', status: 'Available', borrowed_by: null},
     'Book1': {title: 'Book1', author: 'Author1', isbn: '978-0000000001', status: 'Available', borrowed_by: null},

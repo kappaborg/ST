@@ -134,18 +134,17 @@ def validate_shoe_entry(line):
 
 # Test users - created these to test different scenarios
 users = {
-    'john_doe': {'password': 'pass123', 'borrowed_books': []},
-    'jane_smith': {'password': 'pass123', 'borrowed_books': ['Book A', 'Book B', 'Book C', 'Book D', 'Book E']},  # maxed out
-    'alice_brown': {'password': 'pass123', 'borrowed_books': []},
-    'mary_jones': {'password': 'pass123', 'borrowed_books': []}
+    'user1': {'password': 'IUS1', 'borrowed_books': []},
+    'user2': {'password': 'IUS2', 'borrowed_books': ['Book A', 'Book B', 'Book C', 'Book D', 'Book E']},  # maxed out
+    'user3': {'password': 'IUS3', 'borrowed_books': []},
+    'kappasutra': {'password': 'admin', 'borrowed_books': ['To Kill a Mockingbird']}
 }
 
-# Sample book catalog
 books = {
     'The Hobbit': {'title': 'The Hobbit', 'author': 'J.R.R. Tolkien', 'isbn': '978-0547928227', 'status': 'Available', 'borrowed_by': None},
     '1984': {'title': '1984', 'author': 'George Orwell', 'isbn': '978-0451524935', 'status': 'Available', 'borrowed_by': None},
-    'Pride and Prejudice': {'title': 'Pride and Prejudice', 'author': 'Jane Austen', 'isbn': '978-0141439518', 'status': 'Borrowed', 'borrowed_by': 'john_doe'},
-    'To Kill a Mockingbird': {'title': 'To Kill a Mockingbird', 'author': 'Harper Lee', 'isbn': '978-0061120084', 'status': 'Borrowed', 'borrowed_by': 'mary_jones'},
+    'Pride and Prejudice': {'title': 'Pride and Prejudice', 'author': 'Jane Austen', 'isbn': '978-0141439518', 'status': 'Borrowed', 'borrowed_by': 'user1'},
+    'To Kill a Mockingbird': {'title': 'To Kill a Mockingbird', 'author': 'Harper Lee', 'isbn': '978-0061120084', 'status': 'Borrowed', 'borrowed_by': 'kappasutra'},
     'The Great Gatsby': {'title': 'The Great Gatsby', 'author': 'F. Scott Fitzgerald', 'isbn': '978-0743273565', 'status': 'Available', 'borrowed_by': None},
     'The Catcher in the Rye': {'title': 'The Catcher in the Rye', 'author': 'J.D. Salinger', 'isbn': '978-0316769174', 'status': 'Available', 'borrowed_by': None},
     'Book1': {'title': 'Book1', 'author': 'Author1', 'isbn': '978-0000000001', 'status': 'Available', 'borrowed_by': None},
@@ -154,8 +153,6 @@ books = {
     'Book4': {'title': 'Book4', 'author': 'Author4', 'isbn': '978-0000000004', 'status': 'Available', 'borrowed_by': None},
     'Book5': {'title': 'Book5', 'author': 'Author5', 'isbn': '978-0000000005', 'status': 'Available', 'borrowed_by': None},
 }
-
-# Routes for rendering pages
 
 @app.route('/')
 def index():

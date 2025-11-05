@@ -207,15 +207,15 @@
             <div id="result" class="result"></div>
             
             <div class="requirements">
-                <h3>📋 System Requirements</h3>
+                <h3> System Requirements</h3>
                 <ul>
-                    <li>✅ Item name: Alphabetic characters only, length 2-15 characters</li>
-                    <li>✅ Sizes: Whole numbers between 26-55</li>
-                    <li>✅ Format: itemName,size1,size2,...</li>
-                    <li>✅ Sizes must be in ascending order</li>
-                    <li>✅ Maximum of 5 sizes per item</li>
-                    <li>✅ Commas used as separators</li>
-                    <li>✅ Blank spaces are ignored</li>
+                    <li> Item name: Alphabetic characters only, length 2-15 characters</li>
+                    <li> Sizes: Whole numbers between 26-55</li>
+                    <li> Format: itemName,size1,size2,...</li>
+                    <li> Sizes must be in ascending order</li>
+                    <li> Maximum of 5 sizes per item</li>
+                    <li> Commas used as separators</li>
+                    <li> Blank spaces are ignored</li>
                 </ul>
             </div>
             
@@ -230,7 +230,7 @@
             
             if (!input.trim()) {
                 resultDiv.className = 'result invalid';
-                resultDiv.innerHTML = '<h3>❌ Invalid Input</h3><p>Please enter a shoe entry.</p>';
+                resultDiv.innerHTML = '<h3>Invalid Input:</h3><p>Please enter a shoe entry.</p>';
                 resultDiv.style.display = 'block';
                 return;
             }
@@ -249,7 +249,7 @@
                 if (data.valid) {
                     resultDiv.className = 'result valid';
                     resultDiv.innerHTML = `
-                        <h3>✅ VALID Entry</h3>
+                        <h3>VALID Entry</h3>
                         <div class="result-details">
                             <p><strong>Item Name:</strong> ${data.item_name}</p>
                             <p><strong>Sizes:</strong> ${data.sizes.join(', ')}</p>
@@ -262,7 +262,7 @@
                 } else {
                     resultDiv.className = 'result invalid';
                     resultDiv.innerHTML = `
-                        <h3>❌ INVALID Entry</h3>
+                        <h3>Invalid Entry</h3>
                         <div class="result-details">
                             <p><strong>Error:</strong> ${data.error}</p>
                             <p><strong>Covered Equivalence Classes:</strong></p>
@@ -275,7 +275,7 @@
             })
             .catch(error => {
                 resultDiv.className = 'result invalid';
-                resultDiv.innerHTML = `<h3>❌ Error</h3><p>${error.message}</p>`;
+                resultDiv.innerHTML = `<h3>Error:</h3><p>${error.message}</p>`;
                 resultDiv.style.display = 'block';
             });
         }

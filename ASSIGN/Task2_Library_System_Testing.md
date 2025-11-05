@@ -69,12 +69,12 @@ Based on the acceptance criteria, the following test scenarios have been derived
 #### TC1.1: Successful Book Borrowing (Logged In, Available Book)
 **Scenario:** TS1  
 **Preconditions/Test Data:**
-- User "john_doe" is logged in
+- User "user1" is logged in
 - Book "The Hobbit" is available in the system
 - User has less than 5 books currently borrowed
 
 **Test Steps:**
-1. Log in as user "john_doe"
+1. Log in as user "user1"
 2. Search for "The Hobbit"
 3. Click "Borrow" button for "The Hobbit"
 4. Verify the book status and confirmation message
@@ -111,13 +111,13 @@ Based on the acceptance criteria, the following test scenarios have been derived
 #### TC3.1: Attempt to Borrow When Maximum Limit Reached
 **Scenario:** TS3  
 **Preconditions/Test Data:**
-- User "jane_smith" is logged in
-- User "jane_smith" has already borrowed 5 books:
+- User "user2" is logged in
+- User "user2" has already borrowed 5 books:
   - "Book A", "Book B", "Book C", "Book D", "Book E"
 - Book "The Great Gatsby" is available
 
 **Test Steps:**
-1. Log in as user "jane_smith"
+1. Log in as user "user2"
 2. Search for "The Great Gatsby"
 3. Click "Borrow" button for "The Great Gatsby"
 
@@ -133,12 +133,12 @@ Based on the acceptance criteria, the following test scenarios have been derived
 #### TC4.1: Attempt to Borrow Already Borrowed Book
 **Scenario:** TS4  
 **Preconditions/Test Data:**
-- User "john_doe" is logged in
-- Book "To Kill a Mockingbird" is currently borrowed by user "mary_jones"
+- User "user1" is logged in
+- Book "To Kill a Mockingbird" is currently borrowed by user "kappasutra"
 - Book status is "Borrowed"
 
 **Test Steps:**
-1. Log in as user "john_doe"
+1. Log in as user "user1"
 2. Search for "To Kill a Mockingbird"
 3. Click "Borrow" button for "To Kill a Mockingbird"
 
@@ -154,12 +154,12 @@ Based on the acceptance criteria, the following test scenarios have been derived
 #### TC5.1: Attempt to Borrow Same Book Twice
 **Scenario:** TS5  
 **Preconditions/Test Data:**
-- User "john_doe" is logged in
-- User "john_doe" has already borrowed "Pride and Prejudice"
+- User "user1" is logged in
+- User "user1" has already borrowed "Pride and Prejudice"
 - Book "Pride and Prejudice" appears in user's borrowed list
 
 **Test Steps:**
-1. Log in as user "john_doe"
+1. Log in as user "user1"
 2. Search for "Pride and Prejudice"
 3. Click "Borrow" button for "Pride and Prejudice"
 
@@ -175,12 +175,12 @@ Based on the acceptance criteria, the following test scenarios have been derived
 #### TC6.1: Borrow Multiple Books Successfully (Up to 5)
 **Scenario:** TS6  
 **Preconditions/Test Data:**
-- User "alice_brown" is logged in
+- User "user3" is logged in
 - User has no borrowed books currently
 - Five books are available: "Book1", "Book2", "Book3", "Book4", "Book5"
 
 **Test Steps:**
-1. Log in as user "alice_brown"
+1. Log in as user "user3"
 2. Search for and borrow "Book1"
 3. Search for and borrow "Book2"
 4. Search for and borrow "Book3"
@@ -268,12 +268,12 @@ Based on the acceptance criteria, the following test scenarios have been derived
 #### TC10.1: Return a Borrowed Book Successfully
 **Scenario:** TS10  
 **Preconditions/Test Data:**
-- User "john_doe" is logged in
-- User "john_doe" has borrowed "The Hobbit"
+- User "user1" is logged in
+- User "user1" has borrowed "The Hobbit"
 - Book "The Hobbit" appears in user's borrowed list
 
 **Test Steps:**
-1. Log in as user "john_doe"
+1. Log in as user "user1"
 2. Navigate to "My Borrowed Books" section
 3. Find "The Hobbit" in the list
 4. Click "Return" button for "The Hobbit"
@@ -292,12 +292,12 @@ Based on the acceptance criteria, the following test scenarios have been derived
 #### TC11.1: Attempt to Return Book Not Borrowed by User
 **Scenario:** TS11  
 **Preconditions/Test Data:**
-- User "john_doe" is logged in
-- Book "1984" is borrowed by user "mary_jones" (not by john_doe)
-- Book "1984" does not appear in john_doe's borrowed list
+- User "user1" is logged in
+- Book "1984" is borrowed by user "kappasutra" (not by user1)
+- Book "1984" does not appear in user1's borrowed list
 
 **Test Steps:**
-1. Log in as user "john_doe"
+1. Log in as user "user1"
 2. Search for "1984"
 3. Try to access return functionality (if available)
 4. Or attempt to return through direct URL manipulation

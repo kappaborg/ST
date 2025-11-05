@@ -7,8 +7,8 @@ app.secret_key = 'library_system_secret_key_2024'
 #Defining users 
 users = {
     'usr1': {'password': 'IUS1', 'borrowed_books': []},
-    'usr2': {'password': 'IUS3', 'borrowed_books': []},
-    'usr3': {'password': 'IUS4', 'borrowed_books': []},
+    'usr2': {'password': 'IUS2', 'borrowed_books': []},
+    'usr3': {'password': 'IUS3', 'borrowed_books': []},
     'kappasutra': {'password': 'admin', 'borrowed_books': ['Book A', 'Book B', 'Book C', 'Book D', 'Book E']}
 }
 #Defining datas about books and so on
