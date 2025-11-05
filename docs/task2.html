@@ -332,9 +332,9 @@
             </div>
             
             <!-- User Info -->
-            <div id="userInfo" class="user-info">
+            <div id="userInfo" class="user-info" style="display: none;">
                 <strong>Logged in as: <span id="currentUser"></span></strong>
-                <button class="btn btn-secondary" onclick="logout()" style="float: right;">Logout</button>
+                <button class="btn btn-secondary" onclick="handleLogout()" style="float: right;">Logout</button>
                 <div style="clear: both;"></div>
             </div>
             
@@ -354,7 +354,7 @@
                         <option value="author">Author</option>
                         <option value="isbn">ISBN</option>
                     </select>
-                    <button class="btn" onclick="searchBooks()">Search</button>
+                    <button class="btn" onclick="handleSearch()">Search</button>
                 </div>
                 <div id="searchResults" class="book-grid"></div>
             </div>
@@ -428,35 +428,64 @@
         checkLogin();
         
         function checkLogin() {
-            const user = getCurrentUser();
-            if (user) {
-                currentUsername = user;
-                showUserInfo();
-                loadMyBooks();
+            try {
+                const user = window.getCurrentUser();
+                if (user) {
+                    currentUsername = user;
+                    showUserInfo();
+                    loadMyBooks();
+                }
+            } catch (error) {
+                console.error('Check login error:', error);
             }
         }
         
-        function login() {
-            const username = document.getElementById('username').value;
+        function handleLogin() {
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             
-            const data = loginLibrary(username, password);
-            if (data.success) {
-                currentUsername = data.username;
-                showUserInfo();
-                loadMyBooks();
-                showMessage('Login successful!', 'success');
-            } else {
-                showMessage(data.message, 'error');
+            if (!username || !password) {
+                showMessage('Please enter both username and password', 'error');
+                return;
+            }
+            
+            try {
+                const data = window.loginLibrary(username, password);
+                if (data.success) {
+                    currentUsername = data.username;
+                    showUserInfo();
+                    loadMyBooks();
+                    showMessage('Login successful!', 'success');
+                } else {
+                    showMessage(data.message || 'Invalid username or password', 'error');
+                }
+            } catch (error) {
+                showMessage('Error logging in: ' + error.message, 'error');
+                console.error('Login error:', error);
             }
         }
         
+        // Keep login() as alias for backward compatibility
+        function login() {
+            handleLogin();
+        }
+        
+        function handleLogout() {
+            try {
+                window.logoutLibrary();
+                currentUsername = null;
+                document.getElementById('userInfo').classList.remove('active');
+                document.getElementById('myBooksSection').style.display = 'none';
+                showMessage('Logged out successfully', 'success');
+            } catch (error) {
+                showMessage('Error logging out: ' + error.message, 'error');
+                console.error('Logout error:', error);
+            }
+        }
+        
+        // Keep logout() as alias
         function logout() {
-            logoutLibrary();
-            currentUsername = null;
-            document.getElementById('userInfo').classList.remove('active');
-            document.getElementById('myBooksSection').style.display = 'none';
-            showMessage('Logged out successfully', 'success');
+            handleLogout();
         }
         
         function showUserInfo() {
@@ -466,54 +495,107 @@
         }
         
         function loadMyBooks() {
-            const data = getMyBooks();
-            const myBooksDiv = document.getElementById('myBooks');
-            if (data.count === 0) {
-                myBooksDiv.innerHTML = '<p style="color: #a5b4fc;">You have no borrowed books.</p>';
-            } else {
-                myBooksDiv.innerHTML = `
-                    <h4>Borrowed Books (${data.count}/5)</h4>
-                    <ul>
-                        ${data.books.map(book => `
-                            <li>
-                                <span>${book}</span>
-                                <button class="btn btn-secondary" onclick="returnBook('${book}')">Return</button>
-                            </li>
-                        `).join('')}
-                    </ul>
-                `;
+            try {
+                const data = window.getMyBooks();
+                const myBooksDiv = document.getElementById('myBooks');
+                if (!myBooksDiv) {
+                    console.error('myBooks div not found');
+                    return;
+                }
+                
+                if (!data.success || data.count === 0) {
+                    myBooksDiv.innerHTML = '<p style="color: #a5b4fc;">You have no borrowed books.</p>';
+                } else {
+                    const books = data.books || [];
+                    myBooksDiv.innerHTML = `
+                        <h4>Borrowed Books (${data.count}/5)</h4>
+                        <ul>
+                            ${books.map(book => {
+                                const escapedBook = String(book).replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                                return `
+                                <li>
+                                    <span>${book}</span>
+                                    <button class="btn btn-secondary" onclick="handleReturn('${escapedBook}')">Return</button>
+                                </li>
+                            `;
+                            }).join('')}
+                        </ul>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading my books:', error);
+                showMessage('Error loading your books', 'error');
             }
         }
         
-        function searchBooks() {
+        function handleSearch() {
             const query = document.getElementById('searchQuery').value;
             const searchType = document.getElementById('searchType').value;
             
-            const data = window.searchBooks(query, searchType);
-            displayBooks(data.results, 'searchResults');
-            if (data.count === 0) {
-                showMessage('No books found matching your search criteria.', 'error');
+            if (!query || !query.trim()) {
+                showMessage('Please enter a search term.', 'error');
+                return;
+            }
+            
+            try {
+                const data = window.searchBooks(query, searchType);
+                if (data.success) {
+                    displayBooks(data.results, 'searchResults');
+                    if (data.count === 0) {
+                        showMessage('No books found matching your search criteria.', 'error');
+                    } else {
+                        showMessage(`Found ${data.count} book(s)`, 'success');
+                    }
+                } else {
+                    showMessage(data.message || 'Search failed', 'error');
+                }
+            } catch (error) {
+                showMessage('Error searching books: ' + error.message, 'error');
+                console.error('Search error:', error);
             }
         }
         
         function loadCatalog() {
-            const data = window.getCatalog();
-            displayBooks(data.books, 'catalog');
+            try {
+                const data = window.getCatalog();
+                if (data.success) {
+                    displayBooks(data.books, 'catalog');
+                } else {
+                    showMessage('Error loading catalog', 'error');
+                }
+            } catch (error) {
+                showMessage('Error loading catalog: ' + error.message, 'error');
+                console.error('Catalog error:', error);
+            }
         }
         
         function displayBooks(books, containerId) {
             const container = document.getElementById(containerId);
-            container.innerHTML = books.map(book => `
+            if (!container) {
+                console.error('Container not found:', containerId);
+                return;
+            }
+            
+            if (!books || books.length === 0) {
+                container.innerHTML = '<p style="color: #a5b4fc; padding: 20px; text-align: center;">No books to display</p>';
+                return;
+            }
+            
+            container.innerHTML = books.map(book => {
+                // Escape quotes to prevent HTML injection
+                const title = String(book.title).replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                return `
                 <div class="book-card">
                     <h4>${book.title}</h4>
                     <p><strong>Author:</strong> ${book.author}</p>
                     <p><strong>ISBN:</strong> ${book.isbn}</p>
                     <span class="status ${book.status.toLowerCase()}">${book.status}</span>
                     ${book.status === 'Available' && currentUsername ? 
-                        `<button class="btn" onclick="handleBorrow('${book.title}')" style="width: 100%; margin-top: 10px;">Borrow</button>` : 
+                        `<button class="btn" onclick="handleBorrow('${title}')" style="width: 100%; margin-top: 10px;">Borrow</button>` : 
                         ''}
                 </div>
-            `).join('');
+            `;
+            }).join('');
         }
         
         function handleBorrow(bookTitle) {
@@ -522,35 +604,58 @@
                 return;
             }
             
-            const data = window.borrowBook(bookTitle);
-            if (data.success) {
-                showMessage(data.message, 'success');
-                loadMyBooks();
-                loadCatalog();
-            } else {
-                showMessage(data.message, 'error');
+            try {
+                const data = window.borrowBook(bookTitle);
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    loadMyBooks();
+                    loadCatalog();
+                } else {
+                    showMessage(data.message || 'Failed to borrow book', 'error');
+                }
+            } catch (error) {
+                showMessage('Error borrowing book: ' + error.message, 'error');
+                console.error('Borrow error:', error);
             }
         }
         
-        function returnBook(bookTitle) {
-            const data = window.returnBook(bookTitle);
-            if (data.success) {
-                showMessage(data.message, 'success');
-                loadMyBooks();
-                loadCatalog();
-            } else {
-                showMessage(data.message, 'error');
+        function handleReturn(bookTitle) {
+            try {
+                const data = window.returnBook(bookTitle);
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    loadMyBooks();
+                    loadCatalog();
+                } else {
+                    showMessage(data.message || 'Failed to return book', 'error');
+                }
+            } catch (error) {
+                showMessage('Error returning book: ' + error.message, 'error');
+                console.error('Return error:', error);
             }
         }
         
         function showMessage(message, type) {
             const messageDiv = document.getElementById('message');
+            if (!messageDiv) {
+                console.error('Message div not found');
+                console.log('Error message:', message, 'Type:', type);
+                // Try to create a temporary alert if message div doesn't exist
+                alert(message);
+                return;
+            }
+            
             messageDiv.textContent = message;
             messageDiv.className = `message ${type}`;
             messageDiv.style.display = 'block';
             
+            // Scroll to message if it's not visible
+            messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
             setTimeout(() => {
-                messageDiv.style.display = 'none';
+                if (messageDiv) {
+                    messageDiv.style.display = 'none';
+                }
             }, 5000);
         }
         
