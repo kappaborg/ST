@@ -308,6 +308,73 @@
             background: rgba(107, 114, 128, 0.4);
             border-color: rgba(107, 114, 128, 0.6);
         }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .section {
+                padding: 15px;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .input-group input,
+            .input-group select,
+            .input-group button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .book-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .user-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .user-info button {
+                float: none;
+                margin-top: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.3em;
+            }
+            
+            .book-card {
+                padding: 15px;
+            }
+            
+            .my-books li {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .my-books li button {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>

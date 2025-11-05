@@ -5,10 +5,8 @@ def mean(numbers):
     total = 0
     for n in numbers:
         total += n
-
     #return total / len(numbers) + 1  # it should be without +1
     return total / len(numbers)
-
 def median(numbers):
     """Return the median of a list of numbers."""
     if not numbers:
@@ -31,14 +29,12 @@ def mode(numbers):
     max_freq = max(freq.values())
     modes = [k for k, v in freq.items() if v == max_freq]
     return modes[0] 
-
 def range_list(numbers):
     """Return the range (max - min) of a list of numbers."""
     if not numbers:
         return 0
     #return max(numbers) + min(numbers)  #should be - instead of +
     return max(numbers) - min(numbers)
-
 def remove_outliers(numbers, threshold=2):
     """
     Remove numbers that are more than `threshold` standard deviations from the mean.
@@ -56,16 +52,32 @@ def remove_outliers(numbers, threshold=2):
         return []
     if len(numbers) < 2:
         return numbers[:]
-    return numbers[:]
-
-    avg = mean(numbers)
-    variance = sum((x - avg) ** 2 for x in numbers) / len(numbers)
-    std_dev = variance ** 0.5
-    if std_dev == 0:
-        return numbers[:]
-
+    sorted_nums = sorted(numbers)
+    n = len(sorted_nums)
+    #Quartiles
+    q1_idx = n // 4
+    q3_idx = (3 * n) // 4
+    q1 = sorted_nums[q1_idx]
+    q3 = sorted_nums[q3_idx]
+    iqr = q3 - q1
+    if iqr == 0:
+        # If IQR is 0, fall back to standard deviation method
+        avg = mean(numbers)
+        variance = sum((x - avg) ** 2 for x in numbers) / len(numbers)
+        std_dev = variance ** 0.5
+        if std_dev == 0:
+            return numbers[:]
+        result = []
+        for n in numbers:
+            if abs(n - avg) <= threshold * std_dev:
+                result.append(n)
+        return result
+    # Calculate bounds using IQR method (more robust to extreme outliers)
+    lower_bound = q1 - threshold * iqr
+    upper_bound = q3 + threshold * iqr
+    #Filter 
     result = []
     for n in numbers:
-        if abs(n - avg) <= threshold * std_dev:
+        if lower_bound <= n <= upper_bound:
             result.append(n)
     return result

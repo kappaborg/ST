@@ -5,11 +5,12 @@ from flask import Flask, render_template, request, jsonify, session
 from datetime import datetime
 import sys
 import os
-
-# Adding parent directory to import stats_utils
+# Adding parent directory and ASSIGN directory to import stats_utils
 # This is a bit hacky but works for this project structure
 parent_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+assign_path = os.path.join(parent_path, 'ASSIGN')
 sys.path.append(parent_path)
+sys.path.append(assign_path)
 from stats_utils import mean, median, mode, range_list, remove_outliers
 
 app = Flask(__name__)

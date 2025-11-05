@@ -191,6 +191,81 @@
             color: #e0e7ff;
             font-weight: 500;
         }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .header p {
+                font-size: 1em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .tasks-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .task-card {
+                padding: 20px;
+            }
+            
+            .task-card h2 {
+                font-size: 1.5em;
+            }
+            
+            .task-card .icon {
+                font-size: 3em;
+            }
+            
+            h2 {
+                font-size: 1.5em;
+            }
+            
+            .info-section {
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .header p {
+                font-size: 0.9em;
+            }
+            
+            .task-card {
+                padding: 15px;
+            }
+            
+            .task-card h2 {
+                font-size: 1.3em;
+            }
+            
+            .task-card .icon {
+                font-size: 2.5em;
+            }
+            
+            .task-card .btn {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+        }
     </style>
 </head>
 <body>

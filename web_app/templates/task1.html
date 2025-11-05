@@ -248,6 +248,66 @@
             background: rgba(107, 114, 128, 0.4);
             border-color: rgba(107, 114, 128, 0.6);
         }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .input-group input,
+            .input-group button {
+                width: 100%;
+            }
+            
+            .requirements {
+                padding: 15px;
+                font-size: 0.9em;
+            }
+            
+            .requirements > div {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .result {
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.3em;
+            }
+            
+            .header p {
+                font-size: 0.85em;
+            }
+            
+            .covered-classes {
+                font-size: 0.75em;
+            }
+            
+            .class-badge {
+                padding: 4px 8px;
+                font-size: 0.75em;
+            }
+        }
     </style>
 </head>
 <body>
