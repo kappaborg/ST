@@ -189,6 +189,13 @@
             border-radius: 8px;
             font-size: 0.85em;
             font-weight: 500;
+            cursor: help;
+            transition: all 0.2s ease;
+        }
+        
+        .class-badge:hover {
+            background: rgba(139, 92, 246, 0.5);
+            transform: scale(1.05);
         }
         
         .requirements {
@@ -274,6 +281,49 @@
                 </ul>
             </div>
             
+            <!-- Equivalence Classes Reference -->
+            <div class="requirements" style="margin-top: 30px;">
+                <h3>Equivalence Classes Reference</h3>
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: #86efac; margin-bottom: 10px; font-size: 1.1em;">Valid Classes (EC1-EC12)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; font-size: 0.85em;">
+                        <div><strong>EC1:</strong> Name length = 2</div>
+                        <div><strong>EC2:</strong> Name length 3-14</div>
+                        <div><strong>EC3:</strong> Name length = 15</div>
+                        <div><strong>EC4:</strong> Size = 26 (min)</div>
+                        <div><strong>EC5:</strong> Size 27-54</div>
+                        <div><strong>EC6:</strong> Size = 55 (max)</div>
+                        <div><strong>EC7:</strong> Single size</div>
+                        <div><strong>EC8:</strong> 2-4 sizes</div>
+                        <div><strong>EC9:</strong> 5 sizes (max)</div>
+                        <div><strong>EC10:</strong> Ascending order</div>
+                        <div><strong>EC11:</strong> Proper comma</div>
+                        <div><strong>EC12:</strong> Spaces around commas</div>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="color: #fca5a5; margin-bottom: 10px; font-size: 1.1em;">Invalid Classes (EC13-EC28)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; font-size: 0.85em;">
+                        <div><strong>EC13:</strong> Name &lt; 2 chars</div>
+                        <div><strong>EC14:</strong> Name &gt; 15 chars</div>
+                        <div><strong>EC15:</strong> Name has numbers</div>
+                        <div><strong>EC16:</strong> Name has special chars</div>
+                        <div><strong>EC17:</strong> Empty name</div>
+                        <div><strong>EC18:</strong> Size &lt; 26</div>
+                        <div><strong>EC19:</strong> Size &gt; 55</div>
+                        <div><strong>EC20:</strong> Size has decimal</div>
+                        <div><strong>EC21:</strong> Size has letters</div>
+                        <div><strong>EC22:</strong> &gt; 5 sizes</div>
+                        <div><strong>EC23:</strong> No sizes</div>
+                        <div><strong>EC24:</strong> Not ascending</div>
+                        <div><strong>EC25:</strong> Missing comma</div>
+                        <div><strong>EC26:</strong> Missing comma between sizes</div>
+                        <div><strong>EC27:</strong> Extra comma</div>
+                        <div><strong>EC28:</strong> Empty line</div>
+                    </div>
+                </div>
+            </div>
+            
             <a href="index.html" class="link-btn">← Back to Main Menu</a>
         </div>
     </div>
@@ -296,29 +346,58 @@
             
             resultDiv.style.display = 'block';
             
+            // Equivalence class descriptions
+            const ecDescriptions = {
+                'EC1': 'Name length = 2 (min)', 'EC2': 'Name length 3-14', 'EC3': 'Name length = 15 (max)',
+                'EC4': 'Size = 26 (min)', 'EC5': 'Size 27-54', 'EC6': 'Size = 55 (max)',
+                'EC7': 'Single size', 'EC8': '2-4 sizes', 'EC9': '5 sizes (max)',
+                'EC10': 'Ascending order', 'EC11': 'Proper comma', 'EC12': 'Spaces around commas',
+                'EC13': 'Name < 2 chars', 'EC14': 'Name > 15 chars', 'EC15': 'Name has numbers',
+                'EC16': 'Name has special chars', 'EC17': 'Empty name', 'EC18': 'Size < 26',
+                'EC19': 'Size > 55', 'EC20': 'Size has decimal', 'EC21': 'Size has letters',
+                'EC22': '> 5 sizes', 'EC23': 'No sizes', 'EC24': 'Not ascending',
+                'EC25': 'Missing comma', 'EC26': 'Missing comma between sizes', 'EC27': 'Extra comma', 'EC28': 'Empty line'
+            };
+            
             if (data.valid) {
                 resultDiv.className = 'result valid';
+                const classesHtml = data.covered_classes.map(ec => {
+                    const desc = ecDescriptions[ec] || ec;
+                    return `<span class="class-badge" title="${desc}">${ec}</span>`;
+                }).join('');
                 resultDiv.innerHTML = `
                     <h3>✅ VALID Entry</h3>
                     <div class="result-details">
                         <p><strong>Item Name:</strong> ${data.item_name}</p>
                         <p><strong>Sizes:</strong> ${data.sizes.join(', ')}</p>
-                        <p><strong>Covered Equivalence Classes:</strong></p>
+                        <p><strong>Covered Equivalence Classes (${data.covered_classes.length}):</strong></p>
                         <div class="covered-classes">
-                            ${data.covered_classes.map(ec => `<span class="class-badge">${ec}</span>`).join('')}
+                            ${classesHtml}
                         </div>
+                        <p style="margin-top: 15px; font-size: 0.9em; color: #86efac;">
+                            <strong>Explanation:</strong> This input covers ${data.covered_classes.length} equivalence class${data.covered_classes.length !== 1 ? 'es' : ''}. 
+                            Hover over each class code to see its description.
+                        </p>
                     </div>
                 `;
             } else {
                 resultDiv.className = 'result invalid';
+                const classesHtml = data.covered_classes.map(ec => {
+                    const desc = ecDescriptions[ec] || ec;
+                    return `<span class="class-badge" title="${desc}">${ec}</span>`;
+                }).join('');
                 resultDiv.innerHTML = `
                     <h3>❌ INVALID Entry</h3>
                     <div class="result-details">
                         <p><strong>Error:</strong> ${data.error}</p>
-                        <p><strong>Covered Equivalence Classes:</strong></p>
+                        <p><strong>Covered Equivalence Classes (${data.covered_classes.length}):</strong></p>
                         <div class="covered-classes">
-                            ${data.covered_classes.map(ec => `<span class="class-badge">${ec}</span>`).join('')}
+                            ${classesHtml}
                         </div>
+                        <p style="margin-top: 15px; font-size: 0.9em; color: #fca5a5;">
+                            <strong>Explanation:</strong> This input violates the requirement and covers ${data.covered_classes.length} invalid equivalence class${data.covered_classes.length !== 1 ? 'es' : ''}. 
+                            Hover over each class code to see its description.
+                        </p>
                     </div>
                 `;
             }

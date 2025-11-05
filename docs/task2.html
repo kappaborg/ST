@@ -369,6 +369,53 @@
             <!-- Messages -->
             <div id="message" class="message"></div>
             
+            <!-- Implementation Documentation -->
+            <div class="requirements" style="margin-top: 30px;">
+                <h3>Implementation Details</h3>
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: #c7d2fe; margin-bottom: 10px; font-size: 1.1em;">What Was Implemented</h4>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                            <strong>User Authentication:</strong> Login/logout functionality with test users (john_doe, jane_smith, alice_brown, mary_jones)
+                        </li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                            <strong>Book Search:</strong> Search by title, author, or ISBN with real-time results
+                        </li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                            <strong>Borrow Books:</strong> Users can borrow up to 5 books with validation (max limit, availability check, duplicate prevention)
+                        </li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                            <strong>Return Books:</strong> Users can return borrowed books with proper status updates
+                        </li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                            <strong>My Books:</strong> View currently borrowed books with count (X/5)
+                        </li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                            <strong>Book Catalog:</strong> Browse all available books with status indicators
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: #c7d2fe; margin-bottom: 10px; font-size: 1.1em;">Test Scenarios Covered</h4>
+                    <ul style="list-style: none; padding-left: 0; font-size: 0.9em;">
+                        <li style="padding: 6px 0;">✅ TS1: Successful book borrowing (within limit)</li>
+                        <li style="padding: 6px 0;">✅ TS2: Attempt to borrow without login</li>
+                        <li style="padding: 6px 0;">✅ TS3: Borrowing when user has 5 books (max limit)</li>
+                        <li style="padding: 6px 0;">✅ TS4: Borrowing unavailable book</li>
+                        <li style="padding: 6px 0;">✅ TS5: Attempt to borrow same book twice</li>
+                        <li style="padding: 6px 0;">✅ TS6: Successful book return</li>
+                        <li style="padding: 6px 0;">✅ TS7: Search by title</li>
+                        <li style="padding: 6px 0;">✅ TS8: Search by author</li>
+                        <li style="padding: 6px 0;">✅ TS9: Search by ISBN</li>
+                        <li style="padding: 6px 0;">✅ TS10: Return book successfully</li>
+                        <li style="padding: 6px 0;">✅ TS11: Attempt to return book not borrowed</li>
+                        <li style="padding: 6px 0;">✅ TS12: View borrowed books list</li>
+                    </ul>
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background: rgba(139, 92, 246, 0.1); border-radius: 10px; border: 1px solid rgba(139, 92, 246, 0.3);">
+                </div>
+            </div>
+            
             <a href="index.html" class="back-btn">← Back to Main Menu</a>
         </div>
     </div>

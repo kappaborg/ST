@@ -44,20 +44,46 @@ def remove_outliers(numbers, threshold=2):
     """
     Remove outliers using standard deviation
     threshold determines how many std devs away is considered outlier
+    Uses IQR method which is more robust to extreme outliers
     """
     if not numbers or len(numbers) < 2:
-        return numbers[:]  # Need at least 2 numbers for std dev
+        return numbers[:]
     
-    # Calculate mean
-    avg = mean(numbers)
+    # Sort numbers
+    sorted_nums = sorted(numbers)
+    n = len(sorted_nums)
     
-    # Calculate standard deviation
-    variance = sum((x - avg) ** 2 for x in numbers) / len(numbers)
-    std_dev = variance ** 0.5
+    # Calculate quartiles
+    q1_idx = n // 4
+    q3_idx = (3 * n) // 4
+    q1 = sorted_nums[q1_idx]
+    q3 = sorted_nums[q3_idx]
     
-    # Keep numbers within threshold
+    # Calculate IQR
+    iqr = q3 - q1
+    
+    if iqr == 0:
+        # If IQR is 0, use standard deviation method
+        avg = mean(numbers)
+        variance = sum((x - avg) ** 2 for x in numbers) / len(numbers)
+        std_dev = variance ** 0.5
+        if std_dev == 0:
+            return numbers[:]
+        result = []
+        for n in numbers:
+            if abs(n - avg) <= threshold * std_dev:
+                result.append(n)
+        return result
+    
+    # Calculate bounds using IQR method (more robust)
+    # Using threshold as multiplier for IQR
+    lower_bound = q1 - threshold * iqr
+    upper_bound = q3 + threshold * iqr
+    
+    # Filter numbers within bounds
     result = []
     for n in numbers:
-        if std_dev == 0 or abs(n - avg) <= threshold * std_dev:
+        if lower_bound <= n <= upper_bound:
             result.append(n)
+    
     return result

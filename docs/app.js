@@ -367,20 +367,48 @@ function removeOutliers(numbers, threshold = 2) {
         return [...(numbers || [])];
     }
     
-    const avg = mean(numbers);
-    const variance = numbers.reduce((sum, x) => sum + Math.pow(x - avg, 2), 0) / numbers.length;
-    const stdDev = Math.sqrt(variance);
+    // Use IQR (Interquartile Range) method which is more robust to extreme outliers
+    const sorted = [...numbers].sort((a, b) => a - b);
+    const n = sorted.length;
     
-    if (stdDev === 0) {
-        return [...numbers];
+    // Calculate quartiles
+    const q1Idx = Math.floor(n / 4);
+    const q3Idx = Math.floor(3 * n / 4);
+    const q1 = sorted[q1Idx];
+    const q3 = sorted[q3Idx];
+    
+    // Calculate IQR
+    const iqr = q3 - q1;
+    
+    if (iqr === 0) {
+        // If IQR is 0, fall back to standard deviation method
+        const avg = mean(numbers);
+        const variance = numbers.reduce((sum, x) => sum + Math.pow(x - avg, 2), 0) / numbers.length;
+        const stdDev = Math.sqrt(variance);
+        if (stdDev === 0) {
+            return [...numbers];
+        }
+        const result = [];
+        for (const n of numbers) {
+            if (Math.abs(n - avg) <= threshold * stdDev) {
+                result.push(n);
+            }
+        }
+        return result;
     }
     
+    // Calculate bounds using IQR method
+    const lowerBound = q1 - threshold * iqr;
+    const upperBound = q3 + threshold * iqr;
+    
+    // Filter numbers within bounds
     const result = [];
     for (const n of numbers) {
-        if (Math.abs(n - avg) <= threshold * stdDev) {
+        if (n >= lowerBound && n <= upperBound) {
             result.push(n);
         }
     }
+    
     return result;
 }
 

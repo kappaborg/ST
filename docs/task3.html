@@ -328,6 +328,55 @@
             <!-- Messages -->
             <div id="message" class="message"></div>
             
+            <!-- Implementation Documentation -->
+            <div class="requirements" style="margin-top: 30px;">
+                <h3>Implementation Details</h3>
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: #c7d2fe; margin-bottom: 10px; font-size: 1.1em;">Python Code with Tests</h4>
+                    <p style="color: #a5b4fc; margin-bottom: 15px; font-size: 0.9em;">
+                        The statistical functions are implemented in <code>stats_utils.py</code> with comprehensive unit tests in <code>test_stats_utils.py</code>.
+                    </p>
+                    <div style="background: rgba(139, 92, 246, 0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(139, 92, 246, 0.3);">
+                        <p style="margin: 0 0 10px 0; font-weight: 500; color: #e0e7ff;">Functions Implemented:</p>
+                        <ul style="margin: 0; padding-left: 20px; color: #a5b4fc; font-size: 0.9em;">
+                            <li><code>mean(numbers)</code> - Calculate average</li>
+                            <li><code>median(numbers)</code> - Find middle value</li>
+                            <li><code>mode(numbers)</code> - Find most frequent value</li>
+                            <li><code>range_list(numbers)</code> - Calculate range (max - min)</li>
+                            <li><code>remove_outliers(numbers, threshold)</code> - Remove outliers using IQR method</li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="color: #c7d2fe; margin-bottom: 10px; font-size: 1.1em;">Bugs Found and Fixed</h4>
+                    <div style="background: rgba(239, 68, 68, 0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(239, 68, 68, 0.3); margin-bottom: 15px;">
+                        <p style="margin: 0 0 10px 0; font-weight: 500; color: #fca5a5;">Original Bugs (Fixed):</p>
+                        <ul style="margin: 0; padding-left: 20px; color: #a5b4fc; font-size: 0.9em;">
+                            <li><strong>Bug 1 - mean():</strong> Was adding +1 to result → Fixed to return correct average</li>
+                            <li><strong>Bug 2 - median():</strong> Wrong index for odd-length lists → Fixed to use correct middle index</li>
+                            <li><strong>Bug 3 - range_list():</strong> Was adding instead of subtracting → Fixed to return max - min</li>
+                            <li><strong>Bug 4 - remove_outliers():</strong> Missing standard deviation calculation → Implemented using IQR method for better outlier detection</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(34, 197, 94, 0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(34, 197, 94, 0.3);">
+                        <p style="margin: 0 0 10px 0; font-weight: 500; color: #86efac;">Test Coverage:</p>
+                        <ul style="margin: 0; padding-left: 20px; color: #a5b4fc; font-size: 0.9em;">
+                            <li>25+ test cases covering normal, edge, and error cases</li>
+                            <li>All functions tested with empty lists, single elements, negative numbers</li>
+                            <li>Outlier removal tested with extreme values (e.g., [1,2,3,4,1000])</li>
+                            <li>All tests pass after bug fixes</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background: rgba(139, 92, 246, 0.1); border-radius: 10px; border: 1px solid rgba(139, 92, 246, 0.3);">
+                    <p style="margin: 0; font-size: 0.9em; color: #a5b4fc;">
+                        <strong>Note:</strong> The Python code and test file are available in the repository. 
+                        Run <code>python3 test_stats_utils.py</code> to execute all tests. 
+                        The outlier removal uses IQR (Interquartile Range) method for more robust outlier detection.
+                    </p>
+                </div>
+            </div>
+            
             <a href="index.html" class="back-btn">← Back to Main Menu</a>
         </div>
     </div>
