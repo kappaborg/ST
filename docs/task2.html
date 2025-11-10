@@ -539,18 +539,29 @@
         
         function handleLogout() {
             try {
+                // Clear user session from storage
                 window.logoutLibrary();
                 currentUsername = null;
-                document.getElementById('userInfo').classList.remove('active');
-                document.getElementById('myBooksSection').style.display = 'none';
-                showMessage('Logged out successfully', 'success');
+                const userInfoEl = document.getElementById('userInfo');
+                const myBooksSection = document.getElementById('myBooksSection');      
+                if (userInfoEl) {
+                    userInfoEl.classList.remove('active');
+                    userInfoEl.style.display = 'none';
+                }
+                if (myBooksSection) {
+                    myBooksSection.style.display = 'none';
+                }
+                document.getElementById('searchResults').innerHTML = '';
+                document.getElementById('catalog').innerHTML = '';
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                
+                showMessage('You have been logged out successfully', 'success');
             } catch (error) {
-                showMessage('Error logging out: ' + error.message, 'error');
+                showMessage('An error occurred while logging out: ' + error.message, 'error');
                 console.error('Logout error:', error);
             }
         }
-        
-        // Keep logout() as alias
         function logout() {
             handleLogout();
         }
