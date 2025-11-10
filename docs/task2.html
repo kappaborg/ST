@@ -489,11 +489,18 @@
     
     <script src="app.js"></script>
     <script>
+        // Track the currently logged-in user in the frontend
+        // This helps us manage UI state without constantly querying localStorage
         let currentUsername = null;
         
-        // Check login status on page load
+        // Check if user is already logged in when page loads
+        // This provides a seamless experience if they refresh the page
         checkLogin();
         
+        /**
+         * Check if there's an active session when the page loads.
+         * If a user was previously logged in, restore their session and show their data.
+         */
         function checkLogin() {
             try {
                 const user = window.getCurrentUser();
@@ -503,14 +510,20 @@
                     loadMyBooks();
                 }
             } catch (error) {
+                // Silently fail - user just isn't logged in, which is fine
                 console.error('Check login error:', error);
             }
         }
         
+        /**
+         * Handle user login attempt.
+         * Validates input, calls the authentication function, and updates the UI accordingly.
+         */
         function handleLogin() {
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             
+            // Basic validation - make sure both fields are filled
             if (!username || !password) {
                 showMessage('Please enter both username and password', 'error');
                 return;
@@ -519,6 +532,7 @@
             try {
                 const data = window.loginLibrary(username, password);
                 if (data.success) {
+                    // Login successful - update UI state
                     currentUsername = data.username;
                     showUserInfo();
                     loadMyBooks();
@@ -532,18 +546,26 @@
             }
         }
         
-        // Keep login() as alias for backward compatibility
+        // Alias for backward compatibility with onclick handlers
         function login() {
             handleLogin();
         }
         
+        /**
+         * Handle user logout.
+         * Clears the session, resets the UI, and provides user feedback.
+         * I'm making sure to clean up all user-specific UI elements to prevent any state leakage.
+         */
         function handleLogout() {
             try {
-                // Clear user session from storage
+                // Clear the session from storage
                 window.logoutLibrary();
                 currentUsername = null;
+                
+                // Hide user-specific UI elements
                 const userInfoEl = document.getElementById('userInfo');
-                const myBooksSection = document.getElementById('myBooksSection');      
+                const myBooksSection = document.getElementById('myBooksSection');
+                
                 if (userInfoEl) {
                     userInfoEl.classList.remove('active');
                     userInfoEl.style.display = 'none';
@@ -551,8 +573,12 @@
                 if (myBooksSection) {
                     myBooksSection.style.display = 'none';
                 }
+                
+                // Clear search results and catalog to reset the view
                 document.getElementById('searchResults').innerHTML = '';
                 document.getElementById('catalog').innerHTML = '';
+                
+                // Clear the login form
                 document.getElementById('username').value = '';
                 document.getElementById('password').value = '';
                 
@@ -562,16 +588,26 @@
                 console.error('Logout error:', error);
             }
         }
+        
+        // Alias for backward compatibility
         function logout() {
             handleLogout();
         }
         
+        /**
+         * Display user information in the UI after successful login.
+         * Shows the username and makes user-specific sections visible.
+         */
         function showUserInfo() {
             document.getElementById('currentUser').textContent = currentUsername;
             document.getElementById('userInfo').classList.add('active');
             document.getElementById('myBooksSection').style.display = 'block';
         }
         
+        /**
+         * Load and display the current user's borrowed books.
+         * Shows a count (X/5) and provides return buttons for each book.
+         */
         function loadMyBooks() {
             try {
                 const data = window.getMyBooks();
@@ -585,6 +621,8 @@
                     myBooksDiv.innerHTML = '<p style="color: #a5b4fc;">You have no borrowed books.</p>';
                 } else {
                     const books = data.books || [];
+                    // Build the HTML for the borrowed books list
+                    // I'm escaping quotes to prevent XSS attacks
                     myBooksDiv.innerHTML = `
                         <h4>Borrowed Books (${data.count}/5)</h4>
                         <ul>
@@ -606,6 +644,10 @@
             }
         }
         
+        /**
+         * Handle book search functionality.
+         * Validates input and calls the search function, then displays results.
+         */
         function handleSearch() {
             const query = document.getElementById('searchQuery').value;
             const searchType = document.getElementById('searchType').value;
@@ -633,6 +675,10 @@
             }
         }
         
+        /**
+         * Load and display the complete book catalog.
+         * This shows all books in the system with their current status.
+         */
         function loadCatalog() {
             try {
                 const data = window.getCatalog();
@@ -647,6 +693,10 @@
             }
         }
         
+        /**
+         * Render a list of books in the specified container.
+         * Handles empty states and includes security measures to prevent XSS.
+         */
         function displayBooks(books, containerId) {
             const container = document.getElementById(containerId);
             if (!container) {
@@ -659,8 +709,9 @@
                 return;
             }
             
+            // Build the book cards HTML
+            // I'm escaping quotes in the title to prevent HTML injection attacks
             container.innerHTML = books.map(book => {
-                // Escape quotes to prevent HTML injection
                 const title = String(book.title).replace(/'/g, "\\'").replace(/"/g, "&quot;");
                 return `
                 <div class="book-card">
@@ -676,6 +727,10 @@
             }).join('');
         }
         
+        /**
+         * Handle borrowing a book.
+         * Validates login status and calls the borrow function, then refreshes the UI.
+         */
         function handleBorrow(bookTitle) {
             if (!currentUsername) {
                 showMessage('You must be logged in to borrow books.', 'error');
@@ -686,6 +741,7 @@
                 const data = window.borrowBook(bookTitle);
                 if (data.success) {
                     showMessage(data.message, 'success');
+                    // Refresh both lists to show updated status
                     loadMyBooks();
                     loadCatalog();
                 } else {
@@ -697,11 +753,16 @@
             }
         }
         
+        /**
+         * Handle returning a borrowed book.
+         * Calls the return function and refreshes the UI to reflect the changes.
+         */
         function handleReturn(bookTitle) {
             try {
                 const data = window.returnBook(bookTitle);
                 if (data.success) {
                     showMessage(data.message, 'success');
+                    // Refresh both lists to show updated status
                     loadMyBooks();
                     loadCatalog();
                 } else {
@@ -713,12 +774,16 @@
             }
         }
         
+        /**
+         * Display a message to the user with appropriate styling.
+         * Messages auto-hide after 5 seconds and scroll into view if needed.
+         */
         function showMessage(message, type) {
             const messageDiv = document.getElementById('message');
             if (!messageDiv) {
                 console.error('Message div not found');
                 console.log('Error message:', message, 'Type:', type);
-                // Try to create a temporary alert if message div doesn't exist
+                // Fallback to alert if the message div doesn't exist
                 alert(message);
                 return;
             }
@@ -727,9 +792,10 @@
             messageDiv.className = `message ${type}`;
             messageDiv.style.display = 'block';
             
-            // Scroll to message if it's not visible
+            // Scroll to message if it's not visible - improves UX
             messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             
+            // Auto-hide after 5 seconds
             setTimeout(() => {
                 if (messageDiv) {
                     messageDiv.style.display = 'none';
@@ -737,7 +803,8 @@
             }, 5000);
         }
         
-        // Load catalog on page load
+        // Load the catalog when the page first loads
+        // This gives users something to see right away
         loadCatalog();
     </script>
 </body>

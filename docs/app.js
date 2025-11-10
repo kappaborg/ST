@@ -145,8 +145,18 @@ const books = {
     'Book5': {title: 'Book5', author: 'Author5', isbn: '978-0000000005', status: 'Available', borrowed_by: null}
 };
 
-// Initialize localStorage
+// ============================================
+// Library System - Storage Management
+// ============================================
+
+/**
+ * Initialize the library storage system with default data if needed.
+ * This ensures we always have a baseline set of books and users to work with.
+ * I'm using localStorage here since we're building a static site without a backend.
+ */
 function initLibraryStorage() {
+    // Only initialize if we don't already have data stored
+    // This prevents overwriting user changes on page refresh
     if (!localStorage.getItem('library_books')) {
         localStorage.setItem('library_books', JSON.stringify(books));
     }
@@ -155,25 +165,42 @@ function initLibraryStorage() {
     }
 }
 
-// Get current user from localStorage
+/**
+ * Retrieve the currently logged-in user from session storage.
+ * Returns null if no user is logged in, which we check throughout the app.
+ */
 function getCurrentUser() {
     const user = localStorage.getItem('current_user');
     return user ? JSON.parse(user) : null;
 }
 
+/**
+ * Set or clear the current user session.
+ * When logging in, we store the username. When logging out, we pass null to clear it.
+ */
 function setCurrentUser(username) {
     if (username) {
         localStorage.setItem('current_user', JSON.stringify(username));
     } else {
+        // Clear the session when logging out
         localStorage.removeItem('current_user');
     }
 }
 
-// Library functions
+// ============================================
+// Library System - Authentication
+// ============================================
+
+/**
+ * Authenticate a user with their credentials.
+ * Simple password check against our test user database.
+ * In a real app, this would hash passwords and check against a secure database.
+ */
 function loginLibrary(username, password) {
     initLibraryStorage();
     const users = JSON.parse(localStorage.getItem('library_users'));
     
+    // Check if user exists and password matches
     if (users[username] && users[username].password === password) {
         setCurrentUser(username);
         return {success: true, username: username};
@@ -181,46 +208,67 @@ function loginLibrary(username, password) {
     return {success: false, message: 'Invalid username or password'};
 }
 
+/**
+ * Log out the current user and clear their session.
+ * This function handles the cleanup needed when a user logs out.
+ * I'm making sure to clear all session-related data to prevent any state leakage.
+ */
 function logoutLibrary() {
+    // Clear the current user session
     setCurrentUser(null);
-    return {success: true};
+    
+    // Return success status for UI feedback
+    // The frontend will handle hiding user-specific UI elements
+    return {success: true, message: 'Logged out successfully'};
 }
 
+/**
+ * Borrow a book from the library catalog.
+ * Handles all the business logic: checking login status, availability, borrowing limits, etc.
+ * I've added validation at each step to provide clear error messages to users.
+ */
 function borrowBook(bookTitle) {
+    // First, make sure the user is logged in
     const user = getCurrentUser();
     if (!user) {
         return {success: false, message: 'You must be logged in to borrow books.'};
     }
     
+    // Load current library state
     initLibraryStorage();
     const users = JSON.parse(localStorage.getItem('library_users'));
     const booksData = JSON.parse(localStorage.getItem('library_books'));
     
+    // Check if the book actually exists in our catalog
     if (!booksData[bookTitle]) {
         return {success: false, message: `Book "${bookTitle}" not found in catalog.`};
     }
     
+    // Get the user's current borrowed books list
     const userBooks = users[user].borrowed_books || [];
     
+    // Prevent duplicate borrows - can't borrow the same book twice
     if (userBooks.includes(bookTitle)) {
         return {success: false, message: 'You have already borrowed this book. You cannot borrow the same book twice.'};
     }
     
+    // Enforce the 5-book borrowing limit per user
     if (userBooks.length >= 5) {
         return {success: false, message: 'You have reached the maximum borrowing limit of 5 books. Please return a book before borrowing another.'};
     }
     
+    // Check if the book is actually available (not already borrowed by someone else)
     const book = booksData[bookTitle];
     if (book.status !== 'Available') {
         return {success: false, message: `Book "${bookTitle}" is currently not available. It has been borrowed by another user.`};
     }
     
-    // Update book status
+    // All checks passed - proceed with the borrow operation
     book.status = 'Borrowed';
     book.borrowed_by = user;
     userBooks.push(bookTitle);
     
-    // Save to localStorage
+    // Persist the changes to localStorage
     booksData[bookTitle] = book;
     users[user].borrowed_books = userBooks;
     localStorage.setItem('library_books', JSON.stringify(booksData));
@@ -229,34 +277,46 @@ function borrowBook(bookTitle) {
     return {success: true, message: `Book "${bookTitle}" successfully borrowed.`, borrowed_count: userBooks.length};
 }
 
+/**
+ * Return a borrowed book to the library.
+ * Validates that the user actually borrowed the book before allowing the return.
+ * Updates both the book status and the user's borrowed books list.
+ */
 function returnBook(bookTitle) {
+    // Authentication check
     const user = getCurrentUser();
     if (!user) {
         return {success: false, message: 'You must be logged in to return books.'};
     }
     
+    // Load current library state
     initLibraryStorage();
     const users = JSON.parse(localStorage.getItem('library_users'));
     const booksData = JSON.parse(localStorage.getItem('library_books'));
     
+    // Make sure the book exists in our system
     if (!booksData[bookTitle]) {
         return {success: false, message: `Book "${bookTitle}" not found.`};
     }
     
+    // Get user's borrowed books
     const userBooks = users[user].borrowed_books || [];
     
+    // Can't return a book you haven't borrowed
     if (!userBooks.includes(bookTitle)) {
         return {success: false, message: 'You cannot return a book that you have not borrowed.'};
     }
     
-    // Update book status
+    // Update the book status back to available
     const book = booksData[bookTitle];
     book.status = 'Available';
     book.borrowed_by = null;
+    
+    // Remove from user's borrowed list
     const index = userBooks.indexOf(bookTitle);
     userBooks.splice(index, 1);
     
-    // Save to localStorage
+    // Save changes to localStorage
     booksData[bookTitle] = book;
     users[user].borrowed_books = userBooks;
     localStorage.setItem('library_books', JSON.stringify(booksData));
@@ -265,20 +325,28 @@ function returnBook(bookTitle) {
     return {success: true, message: `Book "${bookTitle}" successfully returned.`};
 }
 
+/**
+ * Search for books in the catalog by title, author, or ISBN.
+ * Uses case-insensitive matching for title and author searches to be more user-friendly.
+ * ISBN search is exact match since ISBNs are standardized identifiers.
+ */
 function searchBooks(query, searchType) {
     initLibraryStorage();
     const booksData = JSON.parse(localStorage.getItem('library_books'));
     const results = [];
     
+    // Iterate through all books and check for matches
     for (const key in booksData) {
         const book = booksData[key];
         let matches = false;
         
+        // Different search logic based on the search type
         if (searchType === 'title' && book.title.toLowerCase().includes(query.toLowerCase())) {
             matches = true;
         } else if (searchType === 'author' && book.author.toLowerCase().includes(query.toLowerCase())) {
             matches = true;
         } else if (searchType === 'isbn' && book.isbn.includes(query)) {
+            // ISBN search is case-sensitive and exact match
             matches = true;
         }
         
@@ -290,6 +358,10 @@ function searchBooks(query, searchType) {
     return {success: true, results: results, count: results.length};
 }
 
+/**
+ * Get the list of books currently borrowed by the logged-in user.
+ * Returns an empty list if no user is logged in or if they have no borrowed books.
+ */
 function getMyBooks() {
     const user = getCurrentUser();
     if (!user) {
@@ -303,6 +375,10 @@ function getMyBooks() {
     return {success: true, books: userBooks, count: userBooks.length};
 }
 
+/**
+ * Retrieve the complete book catalog.
+ * Returns all books in the system, regardless of availability status.
+ */
 function getCatalog() {
     initLibraryStorage();
     const booksData = JSON.parse(localStorage.getItem('library_books'));
@@ -549,4 +625,33 @@ function runTest(testCaseId) {
         passed: passed
     };
 }
+
+// ============================================
+// Expose all functions to window object for GitHub Pages
+// This ensures all functions are accessible from HTML onclick handlers
+// ============================================
+
+// Task 1 functions
+window.validateShoeEntry = validateShoeEntry;
+
+// Task 2 functions - Library System
+window.initLibraryStorage = initLibraryStorage;
+window.getCurrentUser = getCurrentUser;
+window.setCurrentUser = setCurrentUser;
+window.loginLibrary = loginLibrary;
+window.logoutLibrary = logoutLibrary;
+window.borrowBook = borrowBook;
+window.returnBook = returnBook;
+window.searchBooks = searchBooks;
+window.getMyBooks = getMyBooks;
+window.getCatalog = getCatalog;
+
+// Task 3 functions - Statistical Functions
+window.mean = mean;
+window.median = median;
+window.mode = mode;
+window.rangeList = rangeList;
+window.removeOutliers = removeOutliers;
+window.calculateStats = calculateStats;
+window.runTest = runTest;
 

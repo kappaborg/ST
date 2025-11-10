@@ -524,14 +524,43 @@
             });
         }
         
+        /**
+         * Handle user logout.
+         * Clears the session on the server, resets the UI, and provides user feedback.
+         * I'm making sure to clean up all user-specific UI elements to prevent any state leakage.
+         */
         function logout() {
             fetch('/api/task2/logout', {method: 'POST'})
                 .then(response => response.json())
                 .then(data => {
+                    // Clear the local username state
                     currentUsername = null;
-                    document.getElementById('userInfo').classList.remove('active');
-                    document.getElementById('myBooksSection').style.display = 'none';
-                    showMessage('Logged out successfully', 'success');
+                    
+                    // Hide user-specific UI elements
+                    const userInfoEl = document.getElementById('userInfo');
+                    const myBooksSection = document.getElementById('myBooksSection');
+                    
+                    if (userInfoEl) {
+                        userInfoEl.classList.remove('active');
+                        userInfoEl.style.display = 'none';
+                    }
+                    if (myBooksSection) {
+                        myBooksSection.style.display = 'none';
+                    }
+                    
+                    // Clear search results and catalog to reset the view
+                    document.getElementById('searchResults').innerHTML = '';
+                    document.getElementById('catalog').innerHTML = '';
+                    
+                    // Clear the login form
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                    
+                    showMessage('You have been logged out successfully', 'success');
+                })
+                .catch(error => {
+                    showMessage('An error occurred while logging out: ' + error.message, 'error');
+                    console.error('Logout error:', error);
                 });
         }
         

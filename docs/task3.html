@@ -350,31 +350,31 @@
             <div class="section">
                 <h3>Run Test Cases</h3>
                 <div class="test-cases">
-                    <div class="test-card" onclick="runTest('mean_normal')">
+                    <div class="test-card" onclick="handleRunTest('mean_normal')">
                         <h4>Mean - Normal Case</h4>
                         <p>Input: [1, 2, 3, 4, 5]<br>Expected: 3.0</p>
                     </div>
-                    <div class="test-card" onclick="runTest('mean_empty')">
+                    <div class="test-card" onclick="handleRunTest('mean_empty')">
                         <h4>Mean - Empty List</h4>
                         <p>Input: []<br>Expected: 0</p>
                     </div>
-                    <div class="test-card" onclick="runTest('median_even')">
+                    <div class="test-card" onclick="handleRunTest('median_even')">
                         <h4>Median - Even Length</h4>
                         <p>Input: [1, 2, 3, 4]<br>Expected: 2.5</p>
                     </div>
-                    <div class="test-card" onclick="runTest('median_odd')">
+                    <div class="test-card" onclick="handleRunTest('median_odd')">
                         <h4>Median - Odd Length</h4>
                         <p>Input: [1, 2, 3, 4, 5]<br>Expected: 3</p>
                     </div>
-                    <div class="test-card" onclick="runTest('mode_single')">
+                    <div class="test-card" onclick="handleRunTest('mode_single')">
                         <h4>Mode - Single Mode</h4>
                         <p>Input: [1, 2, 2, 3]<br>Expected: 2</p>
                     </div>
-                    <div class="test-card" onclick="runTest('range_normal')">
+                    <div class="test-card" onclick="handleRunTest('range_normal')">
                         <h4>Range - Normal Case</h4>
                         <p>Input: [10, 2, 7, 5]<br>Expected: 8</p>
                     </div>
-                    <div class="test-card" onclick="runTest('outliers_normal')">
+                    <div class="test-card" onclick="handleRunTest('outliers_normal')">
                         <h4>Outliers - Remove</h4>
                         <p>Input: [1, 2, 3, 100]<br>Threshold: 2 std dev</p>
                     </div>
@@ -446,7 +446,7 @@
             const threshold = parseFloat(document.getElementById('thresholdInput').value) || 2;
             
             // Use JavaScript function instead of API call
-            const data = calculateStats(numbersStr, functionName, threshold);
+            const data = window.calculateStats(numbersStr, functionName, threshold);
             
             const resultDiv = document.getElementById('result');
             resultDiv.style.display = 'block';
@@ -473,7 +473,7 @@
             }
         }
         
-        function runTest(testCaseId) {
+        function handleRunTest(testCaseId) {
             // Use JavaScript function instead of API call
             const data = window.runTest(testCaseId);
             
