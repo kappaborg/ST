@@ -1,12 +1,7 @@
-# SE302 Homework 01 - Web Application
-# Combined all three tasks into one interface for easier testing
-
 from flask import Flask, render_template, request, jsonify, session
 from datetime import datetime
 import sys
 import os
-# Adding parent directory and ASSIGN directory to import stats_utils
-# This is a bit hacky but works for this project structure
 parent_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 assign_path = os.path.join(parent_path, 'ASSIGN')
 sys.path.append(parent_path)
@@ -21,10 +16,6 @@ app.secret_key = 'se302_homework_secret_key_2025'
 # Implemented based on the homework requirements
 
 def validate_shoe_entry(line):
-    """
-    Validates shoe entry - checks format, name length, sizes, etc.
-    Returns a dict with validation result and error messages
-    """
     # Check for empty input first
     if not line or not line.strip():
         return {"valid": False, "error": "Empty line", "covered_classes": ["EC28"]}
@@ -61,8 +52,6 @@ def validate_shoe_entry(line):
     # Keep track of valid sizes and equivalence classes
     valid_sizes = []
     eq_classes = []
-    
-    # Determine name length equivalence class
     name_len = len(item_name)
     if name_len == 2:
         eq_classes.append("EC1")
@@ -70,8 +59,6 @@ def validate_shoe_entry(line):
         eq_classes.append("EC3")
     else:
         eq_classes.append("EC2")
-    
-    # Check size count equivalence class
     size_count = len(sizes)
     if size_count == 1:
         eq_classes.append("EC7")
@@ -109,7 +96,7 @@ def validate_shoe_entry(line):
         
         valid_sizes.append(size)
     
-    # Check if sizes are in ascending order (required)
+    # Check if sizes are in ascending order!
     if valid_sizes != sorted(valid_sizes):
         return {"valid": False, "error": "Sizes must be in ascending order", "covered_classes": ["EC24"]}
     
@@ -175,8 +162,7 @@ def task3():
     """Statistics calculator page"""
     return render_template('task3.html')
 
-# API endpoints
-
+# Endpoints for API
 # Task 1 endpoints
 @app.route('/api/task1/validate', methods=['POST'])
 def validate_shoe():
@@ -190,7 +176,6 @@ def validate_shoe():
 
 @app.route('/api/task2/login', methods=['POST'])
 def login():
-    """Handle user login"""
     data = request.json
     username = data.get('username', '')
     password = data.get('password', '')
@@ -211,13 +196,11 @@ def login():
 
 @app.route('/api/task2/logout', methods=['POST'])
 def logout():
-    """Handle user logout"""
     session.clear()
     return jsonify({'success': True, 'message': 'Logged out successfully'})
 
 @app.route('/api/task2/check_login')
 def check_login():
-    """Check if user is logged in"""
     return jsonify({
         'logged_in': session.get('logged_in', False),
         'username': session.get('username', None)
@@ -225,7 +208,6 @@ def check_login():
 
 @app.route('/api/task2/borrow', methods=['POST'])
 def borrow():
-    """Handle book borrowing - checks all the acceptance criteria"""
     # First check if user is logged in
     if not session.get('logged_in'):
         return jsonify({
@@ -371,7 +353,6 @@ def search():
 
 @app.route('/api/task2/my_books')
 def my_books():
-    """Get user's borrowed books"""
     if not session.get('logged_in'):
         return jsonify({
             'success': False,
@@ -390,7 +371,6 @@ def my_books():
 
 @app.route('/api/task2/catalog')
 def catalog():
-    """Get all books in catalog"""
     return jsonify({
         'success': True,
         'books': list(books.values())
@@ -400,7 +380,6 @@ def catalog():
 
 @app.route('/api/task3/calculate', methods=['POST'])
 def calculate():
-    """Calculate stats function on the given numbers"""
     data = request.json
     numbers_str = data.get('numbers', '')
     threshold = data.get('threshold', 2)
@@ -462,7 +441,6 @@ def calculate():
 
 @app.route('/api/task3/test_case', methods=['POST'])
 def test_case():
-    """Run one of the predefined test cases"""
     data = request.json
     test_case_id = data.get('test_case', '')
     

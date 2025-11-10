@@ -111,7 +111,6 @@ def validate():
 
 @app.route('/test_cases')
 def test_cases():
-    """Display all test cases from the homework"""
     test_cases = [
         {"id": 1, "input": "reebok,40,43", "expected": "VALID", "classes": ["EC1", "EC4", "EC7", "EC9", "EC10", "EC13", "EC16", "EC18", "EC20"]},
         {"id": 2, "input": "ab,26,30,35,40,55", "expected": "VALID", "classes": ["EC1", "EC4", "EC6", "EC9", "EC10", "EC13", "EC16", "EC18", "EC20"]},

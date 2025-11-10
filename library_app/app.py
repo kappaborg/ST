@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify, session
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = 'library_system_secret_key_2024'
+app.secret_key = 'library_system_secret_key_2025'
 
 #Defining users 
 users = {
@@ -63,7 +63,6 @@ def check_login():
 
 @app.route('/borrow', methods=['POST'])
 def borrow():
-    """Borrow a book - implements all acceptance criteria"""
     if not session.get('logged_in'):
         return jsonify({
             'success': False,
@@ -193,7 +192,6 @@ def search():
 
 @app.route('/my_books')
 def my_books():
-    """Get user's borrowed books"""
     if not session.get('logged_in'):
         return jsonify({
             'success': False,

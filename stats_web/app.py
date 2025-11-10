@@ -1,9 +1,3 @@
-"""
-SE302 Homework 01 - Task 3
-Statistical Functions Web Interface
-Interactive web interface for testing statistical utility functions
-"""
-
 from flask import Flask, render_template, request, jsonify
 import sys
 import os
@@ -20,7 +14,6 @@ def index():
 
 @app.route('/calculate', methods=['POST'])
 def calculate():
-    """Calculate statistical functions"""
     data = request.json
     numbers_str = data.get('numbers', '')
     threshold = data.get('threshold', 2)
